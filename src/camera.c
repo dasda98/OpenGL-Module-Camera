@@ -1,8 +1,6 @@
 #include <camera.h>
 #include <cglm/cam.h>
 
-#include <GLFW/glfw3.h>
-
 
 void initCamera(Camera* camera, vec3 position) {
     glm_vec3_copy(position, camera->position);
@@ -25,22 +23,22 @@ void getProjectionMatrix(Camera* camera, mat4 projection, float aspectRatio) {
     glm_perspective(glm_rad(camera->zoom), aspectRatio, 0.1f, 100.0f, projection);
 }
 
-void processKeyboard(Camera* camera, int direction, float deltaTime) {
+void processKeyboard(Camera* camera, Direction direction, float deltaTime) {
     float velocity = camera->speed * deltaTime;
 
-    if (direction == GLFW_KEY_W) {
+    if (direction == FORWARD) {
         vec3 temp;
         glm_vec3_scale(camera->front, velocity, temp);
         glm_vec3_add(camera->position, temp, camera->position);
     }
 
-    if (direction == GLFW_KEY_S) {
+    if (direction == BACKWARD) {
         vec3 temp;
         glm_vec3_scale(camera->front, velocity, temp);
         glm_vec3_sub(camera->position, temp, camera->position);
     }
 
-    if (direction == GLFW_KEY_A) {
+    if (direction == LEFT) {
         vec3 left;
         glm_vec3_cross(camera->front, camera->up, left);
         glm_vec3_normalize(left);
@@ -48,12 +46,12 @@ void processKeyboard(Camera* camera, int direction, float deltaTime) {
         glm_vec3_sub(camera->position, left, camera->position);
     }
 
-    if (direction == GLFW_KEY_D) {
+    if (direction == RIGHT) {
         vec3 right;
         glm_vec3_cross(camera->up, camera->front, right);
         glm_vec3_normalize(right);
         glm_vec3_scale(right, velocity, right);
-        glm_vec3_sub(camera->position, right, camera->position);
+        glm_vec3_add(camera->position, right, camera->position);
     }
 }
 
